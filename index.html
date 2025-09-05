@@ -53,7 +53,15 @@
       let a = -(g * dx * dx) / (2 * v * v);
       let b = dx;
       let c = -(a + dy); // c = - (a + dy)
-
+      if (v <= 0 || isNaN(v)) {
+        result.innerHTML = "❌ Please enter a positive velocity.";
+        return;
+      }
+      let maxPossibleRange = (v * v) / g;
+      if (dx > maxPossibleRange && dy >= 0) {
+        result.innerHTML = "❌ Too far or too high for the given speed.";
+        return;
+      }
       let discriminant = b * b - 4 * a * c;
 
       let output = "";
