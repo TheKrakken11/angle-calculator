@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Projectile Angle Calculator</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, button { margin: 5px 0; padding: 5px; }
+    .output { margin-top: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h2>Projectile Launch Angle Calculator</h2>
+
+  <label>Velocity (mph):</label><br>
+  <input type="number" id="velocity" placeholder="e.g. 60"><br>
+
+  <label>Horizontal Distance - dx (feet):</label><br>
+  <input type="number" id="dx" placeholder="e.g. 82.5"><br>
+
+  <label>Vertical Distance - dy (feet):</label><br>
+  <input type="number" id="dy" placeholder="e.g. 0"><br>
+
+  <button onclick="calculate()">Calculate Angle(s)</button>
+
+  <div class="output" id="result"></div>
+
+  <script>
+    function calculate() {
+      const g = 9.81; // m/s²
+
+      // Get input values
+      let v_mph = parseFloat(document.getElementById("velocity").value);
+      let dx_ft = parseFloat(document.getElementById("dx").value);
+      let dy_ft = parseFloat(document.getElementById("dy").value);
+
+      // Convert to SI units
+      let v = v_mph * 0.44704;      // mph to m/s
+      let dx = dx_ft * 0.3048;      // ft to meters
+      let dy = dy_ft * 0.3048;
+
+      // Quadratic form: a*T² + b*T + c = 0, T = tan(θ)
+      let a = -(g * dx * dx) / (2 * v * v);
+      let b = dx;
+      let c = -(a + dy); // c = - (a + dy)
+
+      let discriminant = b * b - 4 * a * c;
+
+      let output = "";
+
+      if (discriminant < 0) {
+        output = "❌ No solution: target is out of range for given speed.";
+      } else {
+        let sqrtD = Math.sqrt(discriminant);
+        let denom = 2 * a;
+
+        let T1 = (-b + sqrtD) / denom;
+        let T2 = (-b - sqrtD) / denom;
+
+        let angle1 = Math.atan(T1) * (180 / Math.PI);
+        let angle2 = Math.atan(T2) * (180 / Math.PI);
+
+        // Sort angles
+        let angles = [angle1, angle2].sort((a, b) => a - b);
+
+        // Format output
+        if (Math.abs(angle1 - angle2) < 0.01) {
+          output = `✅ One possible launch angle: ${angles[0].toFixed(2)}°`;
+        } else {
+          output = `✅ Two possible launch angles:<br>Low: ${angles[0].toFixed(2)}°<br>High: ${angles[1].toFixed(2)}°`;
+        }
+      }
+
+      document.getElementById("result").innerHTML = output;
+    }
+  </script>
+
+</body>
+</html>
