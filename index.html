@@ -75,8 +75,8 @@
         let T1 = (-b + sqrtD) / denom;
         let T2 = (-b - sqrtD) / denom;
 
-        let angle1 = Math.atan(T1) * (180 / Math.PI);
         let angle2 = Math.atan(T2) * (180 / Math.PI);
+        let angle1 = 45 - (angle2 - 45);
 
         // Sort angles
         let angles = [angle1, angle2].sort((a, b) => a - b);
